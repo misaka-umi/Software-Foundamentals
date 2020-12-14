@@ -1,0 +1,145 @@
+class Node:
+    def __init__(self, data, next_data = None):
+        self.__data = data
+        self.__next = next_data
+    def __str__(self):
+        return self.__data
+    def get_data(self):
+        return self.__data
+    def get_next(self):
+        return self.__next
+    def set_data(self,data):
+        self.__data = data
+    def set_next(self,next_data):
+        self.__next = next_data
+    def add_after(self, value):
+        tmp = self.__next
+        a = Node(str(value))
+        self.__next = a
+        a.set_next(tmp)
+    def remove_after(self):
+        tmp = self.get_next().get_next()
+        self.__next = tmp
+    def __contains__(self, value):
+        if self.__next == None and self.__data != value:
+            return False
+        else:
+            if self.__data == value :
+                return True
+            tmp = self.__next
+            while tmp != None:
+                if tmp.get_data() == value:
+                    return True
+                else:
+                    tmp = tmp.get_next()
+            return False
+    def get_sum(self): #此处假设仅有整数值
+        num = self.__data
+        tmp = self.__next
+        while tmp != None:
+            num +=tmp.get_data()
+            tmp = tmp.get_next()
+        return num
+
+
+
+
+
+
+
+class LinkedList():
+    def __init__(self):
+        self.__head = None
+    def add(self, value):
+        new_node = Node(value)
+        new_node.set_next(self.__head)
+        self.__head = new_node
+    def size(self):
+        tmp = self.__head
+        num = 0
+        while tmp != None:
+            num += 1
+            tmp = tmp.get_next()
+        return num
+    def get_head(self):
+        return self.__head
+    def clear(self):
+        self.__head = None
+    def is_empty(self):
+        if self.__head == None:
+            return True
+        else:
+            return False
+    def __len__(self):
+        return self.size()
+    def __str__(self):
+        tmp = self.__head
+        s = '['
+        while tmp != None:
+            if tmp.get_next() ==None:
+                s = s + str(tmp.get_data())
+                break
+            s = s + str(tmp.get_data()) + ', '
+            tmp = tmp.get_next()
+        s = s+']'
+        return s
+    def __contains__(self, search_value):     # 用法 print('hello' in values)
+        tmp = self.__head
+        while tmp != None:
+            if tmp.get_data() == search_value:
+                return True
+            tmp = tmp.get_next()
+        return False
+    def __getitem__(self, index): #print(my_list[0])
+        tmp = self.__head
+        while index != 0:
+            tmp = tmp.get_next()
+            index -= 1
+        return tmp.get_data()
+    def add_all(self, a_list):
+        num = len(a_list)
+        for i in range(num):
+            self.add(a_list[i])
+    def get_min_odd(self):
+        min_ = 999
+        if self.__head == None:
+            return min_
+        tmp = self.__head
+        while tmp != None:
+            num=tmp.get_data()
+            if num %2 != 0 and num < min_:
+                min_ = num
+            tmp = tmp.get_next()
+        return min_
+
+
+class LinkedListHashTable:
+    def __init__(self,size=7):
+        self.__size = size
+        self.__slots = []
+        for i in range(size):
+            self.__slots.append(LinkedList())
+    def get_hash_code(self,key):
+        return key%self.__size
+    def __str__(self):
+        for i in range(self.__size-1):
+            print(str(self.__slots[i]))
+        return str(self.__slots[self.__size-1])
+    def put(self, key):
+        index = self.get_hash_code(key)
+        self.__slots[index].add(key)
+    def __len__(self):
+        num = 0
+        for i in self.__slots:
+            num += len(i)
+        return num
+hash_table = LinkedListHashTable(5)
+hash_table.put(3)
+hash_table.put(6)
+hash_table.put(9)
+hash_table.put(11)
+hash_table.put(21)
+hash_table.put(13)
+print(hash_table)
+print("The linked list hash table contains {} items.".format(len(hash_table)))
+        
